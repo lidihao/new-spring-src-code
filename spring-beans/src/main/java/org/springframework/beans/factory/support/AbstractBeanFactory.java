@@ -116,6 +116,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private BeanFactory parentBeanFactory;
 
 	/** ClassLoader to resolve bean class names with, if necessary. */
+	// 获取当前的类加载器，一般通过Thread.currentThread().getContextClassLoader()获取
 	@Nullable
 	private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
@@ -124,9 +125,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private ClassLoader tempClassLoader;
 
 	/** Whether to cache bean metadata or rather reobtain it for every access. */
+	// 缓存Bean的元数据
 	private boolean cacheBeanMetadata = true;
 
 	/** Resolution strategy for expressions in bean definition values. */
+	// 对BeanDefinition中的表达式进行求解
 	@Nullable
 	private BeanExpressionResolver beanExpressionResolver;
 
@@ -135,8 +138,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private ConversionService conversionService;
 
 	/** Custom PropertyEditorRegistrars to apply to the beans of this factory. */
+	// BeanFactory中的属性编辑器
 	private final Set<PropertyEditorRegistrar> propertyEditorRegistrars = new LinkedHashSet<>(4);
 
+	// BeanFactory中的属性编辑器
 	/** Custom PropertyEditors to apply to the beans of this factory. */
 	private final Map<Class<?>, Class<? extends PropertyEditor>> customEditors = new HashMap<>(4);
 
@@ -148,15 +153,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private final List<StringValueResolver> embeddedValueResolvers = new CopyOnWriteArrayList<>();
 
 	/** BeanPostProcessors to apply in createBean. */
+	// Bean后置处理器
 	private final List<BeanPostProcessor> beanPostProcessors = new CopyOnWriteArrayList<>();
 
 	/** Indicates whether any InstantiationAwareBeanPostProcessors have been registered. */
+	// 是否开启InstantiationAwareBeanPostProcess
 	private volatile boolean hasInstantiationAwareBeanPostProcessors;
 
+	// 是否开启DestructionAwareBeanPostProcess
 	/** Indicates whether any DestructionAwareBeanPostProcessors have been registered. */
 	private volatile boolean hasDestructionAwareBeanPostProcessors;
 
 	/** Map from scope identifier String to corresponding Scope. */
+	// Bean的范围
 	private final Map<String, Scope> scopes = new LinkedHashMap<>(8);
 
 	/** Security context used when running with a SecurityManager. */
@@ -164,12 +173,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private SecurityContextProvider securityContextProvider;
 
 	/** Map from bean name to merged RootBeanDefinition. */
+	// 存储BeanDefinition
 	private final Map<String, RootBeanDefinition> mergedBeanDefinitions = new ConcurrentHashMap<>(256);
 
 	/** Names of beans that have already been created at least once. */
+	// 已经被创建的Bean
 	private final Set<String> alreadyCreated = Collections.newSetFromMap(new ConcurrentHashMap<>(256));
 
 	/** Names of beans that are currently in creation. */
+	// 正在被创建的多例的Bean
 	private final ThreadLocal<Object> prototypesCurrentlyInCreation =
 			new NamedThreadLocal<>("Prototype beans currently in creation");
 
@@ -238,12 +250,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@SuppressWarnings("unchecked")
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
-
+		// 去除FactoryBean的前缀，解析Bean的别名
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
+		// 是否已经被实例化了，单例Bean会被提前实例化
+		//解决循环依赖，现在Bean已经被实例化了，但是还没有被设置属性值，通过ObjectFactory暴露出对象引用
 		Object sharedInstance = getSingleton(beanName);
+
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
 				if (isSingletonCurrentlyInCreation(beanName)) {
@@ -1124,6 +1139,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	//---------------------------------------------------------------------
 
 	/**
+	 * 去除FactoryBean的前缀，解析Bean的别名
 	 * Return the bean name, stripping out the factory dereference prefix if necessary,
 	 * and resolving aliases to canonical names.
 	 * @param name the user-specified name
@@ -1643,6 +1659,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
 
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
+		// 包含FactoryBean的前缀引用
 		if (BeanFactoryUtils.isFactoryDereference(name)) {
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
@@ -1661,6 +1678,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 		Object object = null;
 		if (mbd == null) {
+			// 从缓存中获取（缓存是缓存由FactoryBean创建的Bean）
 			object = getCachedObjectForFactoryBean(beanName);
 		}
 		if (object == null) {
@@ -1670,7 +1688,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			if (mbd == null && containsBeanDefinition(beanName)) {
 				mbd = getMergedLocalBeanDefinition(beanName);
 			}
-			boolean synthetic = (mbd != null && mbd.isSynthetic());
+			boolean synthetic = (mbd != null && mbd.isSynthetic()); // 是不是由内部合成的，不是由应用程序自定义的
+			//调用FactoryBean的getObject方法
 			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
 		}
 		return object;

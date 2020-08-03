@@ -83,7 +83,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/** Set of registered singletons, containing the bean names in registration order. */
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
-
+	// 存储正在被实例化的Bean
 	/** Names of beans that are currently in creation. */
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
@@ -177,6 +177,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 		Object singletonObject = this.singletonObjects.get(beanName);
+		// 解决循环依赖，现在Bean已经被实例化了，但是还没有被设置属性值，通过ObjectFactory暴露出对象引用
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
 				singletonObject = this.earlySingletonObjects.get(beanName);
@@ -608,6 +609,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 *获取对象池的锁
 	 * Exposes the singleton mutex to subclasses and external collaborators.
 	 * <p>Subclasses should synchronize on the given Object if they perform
 	 * any sort of extended singleton creation phase. In particular, subclasses

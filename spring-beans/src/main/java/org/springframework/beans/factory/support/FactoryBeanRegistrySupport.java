@@ -45,6 +45,7 @@ import org.springframework.lang.Nullable;
 public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanRegistry {
 
 	/** Cache of singleton objects created by FactoryBeans: FactoryBean name to object. */
+	// 缓存由FactoryBean创建的Bean
 	private final Map<String, Object> factoryBeanObjectCache = new ConcurrentHashMap<>(16);
 
 
@@ -86,6 +87,10 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	}
 
 	/**
+	 * 调用FactoryBean#getObject的方法，如果是单例先从FactoryBean->Object的缓存中
+	 * 获取，否则就创建一个新的实例，如果是多例，直接调用FactoryBean#getObject方法获取
+	 *最后如果不是系统内部的合成对象，还会调用BeanPostProcessor#postProcessAfterInitialization的方法
+	 * (因为该Bean是由FactoryBean第一次创建的)
 	 * Obtain an object to expose from the given FactoryBean.
 	 * @param factory the FactoryBean instance
 	 * @param beanName the name of the bean
@@ -97,8 +102,10 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName, boolean shouldPostProcess) {
 		if (factory.isSingleton() && containsSingleton(beanName)) {
 			synchronized (getSingletonMutex()) {
+				//这里还有疑问为什么要两次从缓存中获取对象，与循环依赖相关???
 				Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
+					//调用FactoryBean的getObject方法
 					object = doGetObjectFromFactoryBean(factory, beanName);
 					// Only post-process and store if not put there already during getObject() call above
 					// (e.g. because of circular reference processing triggered by custom getBean calls)
@@ -147,6 +154,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	}
 
 	/**
+	 * 调用FactoryBean的getObject方法
 	 * Obtain an object to expose from the given FactoryBean.
 	 * @param factory the FactoryBean instance
 	 * @param beanName the name of the bean
