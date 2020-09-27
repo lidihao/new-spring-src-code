@@ -231,6 +231,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 	}
 
 	/**
+	 * 是否全局回滚, 默认为true
 	 * Set whether to globally mark an existing transaction as rollback-only
 	 * after a participating transaction failed.
 	 * <p>Default is "true": If a participating transaction (e.g. with
@@ -445,6 +446,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 				return status;
 			}
 			catch (RuntimeException | Error beginEx) {
+				// 启动当前事务失败，继续上一个事务
 				resumeAfterBeginException(transaction, suspendedResources, beginEx);
 				throw beginEx;
 			}
@@ -577,6 +579,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 
 
 	/**
+	 * 挂起事务，将TransactionSynchronization清空，并返回（保存现场）
 	 * Suspend the given transaction. Suspends transaction synchronization first,
 	 * then delegates to the {@code doSuspend} template method.
 	 * @param transaction the current transaction object
@@ -624,6 +627,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 	}
 
 	/**
+	 * 将挂起的内容重新复制到TransactionSynchronization(恢复现场)
 	 * Resume the given transaction. Delegates to the {@code doResume}
 	 * template method first, then resuming transaction synchronization.
 	 * @param transaction the current transaction object
@@ -714,6 +718,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 		}
 
 		DefaultTransactionStatus defStatus = (DefaultTransactionStatus) status;
+		// 事务被标志为回滚
 		if (defStatus.isLocalRollbackOnly()) {
 			if (defStatus.isDebug()) {
 				logger.debug("Transactional code has requested rollback");
@@ -844,12 +849,14 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 			try {
 				triggerBeforeCompletion(status);
 
+				// 事务有Savepoint,回退到savepoint
 				if (status.hasSavepoint()) {
 					if (status.isDebug()) {
 						logger.debug("Rolling back transaction to savepoint");
 					}
 					status.rollbackToHeldSavepoint();
 				}
+				// 新事务，直接调用Connetion.rollback()回退
 				else if (status.isNewTransaction()) {
 					if (status.isDebug()) {
 						logger.debug("Initiating transaction rollback");
@@ -858,6 +865,7 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 				}
 				else {
 					// Participating in larger transaction
+					// 参与一个大的事务
 					if (status.hasTransaction()) {
 						if (status.isLocalRollbackOnly() || isGlobalRollbackOnParticipationFailure()) {
 							if (status.isDebug()) {

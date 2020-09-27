@@ -20,6 +20,7 @@ import org.springframework.core.NamedThreadLocal;
 import org.springframework.lang.Nullable;
 
 /**
+ * AopContext获取当前的代理对象
  * Class containing static methods used to obtain information about the current AOP invocation.
  *
  * <p>The {@code currentProxy()} method is usable if the AOP framework is configured to

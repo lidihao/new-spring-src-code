@@ -31,6 +31,8 @@ import org.springframework.core.BridgeMethodResolver;
 import org.springframework.lang.Nullable;
 
 /**
+ *
+ * 使用反射机制调用目标方法
  * Spring's implementation of the AOP Alliance
  * {@link org.aopalliance.intercept.MethodInvocation} interface,
  * implementing the extended

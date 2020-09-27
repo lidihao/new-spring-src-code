@@ -21,6 +21,8 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.Advisor;
 
 /**
+ *
+ * 切面适配器，将Advice转成Advisor, 将Advisor转成MethodInterceptor[]
  * Interface for registries of Advisor adapters.
  *
  * <p><i>This is an SPI interface, not to be implemented by any Spring user.</i>
