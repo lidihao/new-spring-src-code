@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * 在每一次方法调用时，都会调用注册在ApplicationEventPublisher上ApplicationListener
  * {@link MethodInterceptor Interceptor} that publishes an
  * {@code ApplicationEvent} to all {@code ApplicationListeners}
  * registered with an {@code ApplicationEventPublisher} after each

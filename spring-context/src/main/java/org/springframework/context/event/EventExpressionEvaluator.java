@@ -43,6 +43,7 @@ class EventExpressionEvaluator extends CachedExpressionEvaluator {
 
 
 	/**
+	 * 求解事件发生的表达式
 	 * Specify if the condition defined by the specified expression matches.
 	 */
 	public boolean condition(String conditionExpression, ApplicationEvent event, Method targetMethod,

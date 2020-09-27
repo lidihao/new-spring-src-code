@@ -44,6 +44,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 将事件处理代理代理到一个标有@EventListener注解的方法来处理
  * {@link GenericApplicationListener} adapter that delegates the processing of
  * an event to an {@link EventListener} annotated method.
  *
@@ -85,7 +86,9 @@ public class ApplicationListenerMethodAdapter implements GenericApplicationListe
 
 
 	public ApplicationListenerMethodAdapter(String beanName, Class<?> targetClass, Method method) {
+		// beanName
 		this.beanName = beanName;
+		// 标有EventListener注解的方法
 		this.method = BridgeMethodResolver.findBridgedMethod(method);
 		this.targetMethod = (!Proxy.isProxyClass(targetClass) ?
 				AopUtils.getMostSpecificMethod(method, targetClass) : this.method);

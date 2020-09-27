@@ -24,6 +24,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.util.Assert;
 
 /**
+ * 用来解析@Scope
  * A {@link ScopeMetadataResolver} implementation that by default checks for
  * the presence of Spring's {@link Scope @Scope} annotation on the bean class.
  *

@@ -17,6 +17,7 @@
 package org.springframework.context;
 
 /**
+ * 初始化ApplicationContext
  * Callback interface for initializing a Spring {@link ConfigurableApplicationContext}
  * prior to being {@linkplain ConfigurableApplicationContext#refresh() refreshed}.
  *
