@@ -22,6 +22,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.interceptor.TransactionAttribute;
 
 /**
+ * 负责将注解的属性解析出来
  * Strategy interface for parsing known transaction annotation types.
  * {@link AnnotationTransactionAttributeSource} delegates to such
  * parsers for supporting specific annotation types such as Spring's own
