@@ -8,23 +8,23 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jdiff" level="project" />
-    <orderEntry type="module" module-name="test3" />
-    <orderEntry type="module" module-name="main12" />
-    <orderEntry type="module" module-name="main2" />
     <orderEntry type="module" module-name="test2" />
-    <orderEntry type="module" module-name="test13" />
     <orderEntry type="module" module-name="main4" />
-    <orderEntry type="module" module-name="main7" />
-    <orderEntry type="module" module-name="test5" />
-    <orderEntry type="module" module-name="main13" />
+    <orderEntry type="module" module-name="test13" />
     <orderEntry type="module" module-name="test7" />
-    <orderEntry type="module" module-name="test15" />
-    <orderEntry type="module" module-name="test18" />
-    <orderEntry type="module" module-name="main5" />
-    <orderEntry type="module" module-name="test12" />
     <orderEntry type="module" module-name="test14" />
-    <orderEntry type="module" module-name="test17" />
-    <orderEntry type="module" module-name="main17" />
+    <orderEntry type="module" module-name="test15" />
+    <orderEntry type="module" module-name="main2" />
+    <orderEntry type="module" module-name="main5" />
+    <orderEntry type="module" module-name="test5" />
     <orderEntry type="module" module-name="main11" />
+    <orderEntry type="module" module-name="test17" />
+    <orderEntry type="module" module-name="test3" />
+    <orderEntry type="module" module-name="test12" />
+    <orderEntry type="module" module-name="main17" />
+    <orderEntry type="module" module-name="main13" />
+    <orderEntry type="module" module-name="test18" />
+    <orderEntry type="module" module-name="main7" />
+    <orderEntry type="module" module-name="main12" />
   </component>
 </module>

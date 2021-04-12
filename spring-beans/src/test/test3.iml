@@ -8,11 +8,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jdiff" level="project" />
-    <orderEntry type="module" module-name="main13" />
-    <orderEntry type="module" module-name="main5" />
-    <orderEntry type="module" module-name="test12" />
     <orderEntry type="module" module-name="test4" />
-    <orderEntry type="module" module-name="test13" />
     <orderEntry type="module" module-name="main4" />
+    <orderEntry type="module" module-name="test13" />
+    <orderEntry type="module" module-name="test12" />
+    <orderEntry type="module" module-name="main5" />
+    <orderEntry type="module" module-name="main13" />
   </component>
 </module>
